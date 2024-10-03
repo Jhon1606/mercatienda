@@ -1,3 +1,9 @@
+<?php
+require_once('../Modelo/categorias.php');
+
+$modeloCategoria = new categorias;
+$categorias = $modeloCategoria->getCategorias();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,16 +38,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Técnologia</td>
-                    <td class="text-end">
-                        <a href="javascript:void(0);"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
-                        <a href="javascript:void(0);"><button class="btn btn-danger"><i class="bi bi-trash3"></i></button></a>
-                    </td>
-                </tr>
+                <?php
+                if ($categorias != null) {
+                    foreach ($categorias as $categoria) {
+                ?>
+                        <tr>
+                            <td><?php echo $categoria['id']; ?></td>
+                            <td><?php echo $categoria['nombre']; ?></td>
+                            <td class="text-end">
+                                <a href="javascript:void(0);" onclick="modalEditarCategoria('<?php echo $categoria['id'] ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
+                                <a href="javascript:void(0);" onclick="modalEliminar('Categoria','<?php echo $categoria['id'] ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
+                            </td>
+                        </tr>
             </tbody>
+        <?php
+                    }
+                } else {
+        ?>
         </table>
+        <p>No hay productos</p>
+    <?php
+                }
+    ?>
     </div>
 
     <!-- Paginador -->
@@ -62,7 +80,50 @@
             </li>
         </ul>
     </nav>
-    <?php require_once('add.php'); ?>
+    <?php
+    require_once('add.php');
+    require_once('edit.php');
+    require_once('delete.php');
+    ?>
+    <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'success'): ?>
+        <script>
+            let mensaje = "El registro se realizó con éxito.";
+            <?php if (isset($_GET['accion'])): ?>
+                let accion = "<?php echo $_GET['accion']; ?>";
+                if (accion === 'editar') {
+                    mensaje = "¡Éxito! La categoría se actualizó con éxito.";
+                } else if (accion === 'eliminar') {
+                    mensaje = "¡Éxito! La categoría fue eliminado con éxito.";
+                }
+            <?php endif; ?>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: mensaje,
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                setTimeout(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500);
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'error'): ?>
+        <script>
+            let detalle = "<?php echo isset($_GET['detalle']) ? $_GET['detalle'] : 'Ocurrió un error.'; ?>";
+            Swal.fire({
+                title: '¡Error!',
+                text: detalle,
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                setTimeout(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

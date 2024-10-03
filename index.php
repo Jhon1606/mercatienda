@@ -1,3 +1,10 @@
+<?php
+require_once('Productos/Modelo/productos.php');
+
+$modeloProducto = new productos;
+$productos = $modeloProducto->getProductos();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,21 +42,33 @@
                     <th scope="col"></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>0245887</td>
-                    <td>Televisor LG</td>
-                    <td>Tecnologia, Televisores</td>
-                    <td>102.000</td>
-                    <td>54</td>
-                    <td>Img</td>
-                    <td>
-                        <a href="javascript:void(0);"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
-                        <a href="javascript:void(0);"><button class="btn btn-danger"><i class="bi bi-trash3"></i></button></a>
-                    </td>
-                </tr>
-            </tbody>
+            <?php
+            if ($productos != null) {
+                foreach ($productos as $producto) {
+            ?>
+                    <tbody>
+                        <tr>
+                            <td><?php echo $producto['codigo']; ?></td>
+                            <td><?php echo $producto['nombre']; ?></td>
+                            <td><?php echo $producto['categoria_id']; ?></td>
+                            <td><?php echo $producto['precio']; ?></td>
+                            <td><?php echo $producto['cantidad']; ?></td>
+                            <td><?php echo $producto['imagen']; ?></td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="modalEditarProducto('<?php echo $producto['id']; ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
+                                <a href="javascript:void(0);" onclick="modalEliminar('Producto')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                <?php
+                }
+            } else {
+                ?>
         </table>
+        <p>No hay productos</p>
+    <?php
+            }
+    ?>
     </div>
 
     <!-- Paginador -->
@@ -71,6 +90,48 @@
         </ul>
     </nav>
     <?php require_once('Productos/Vista/add.php'); ?>
+    <?php require_once('Productos/Vista/edit.php'); ?>
+    <?php require_once('Productos/Vista/delete.php'); ?>
+
+    <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'success'): ?>
+        <script>
+            let mensaje = "El registro se realizó con éxito.";
+            <?php if (isset($_GET['accion'])): ?>
+                let accion = "<?php echo $_GET['accion']; ?>";
+                if (accion === 'editar') {
+                    mensaje = "¡Éxito! El empleado fue editado con éxito.";
+                } else if (accion === 'eliminar') {
+                    mensaje = "¡Éxito! El empleado fue eliminado con éxito.";
+                }
+            <?php endif; ?>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: mensaje,
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                setTimeout(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500);
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'error'): ?>
+        <script>
+            let detalle = "<?php echo isset($_GET['detalle']) ? $_GET['detalle'] : 'Ocurrió un error.'; ?>";
+            Swal.fire({
+                title: '¡Error!',
+                text: detalle,
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                setTimeout(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500);
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

@@ -1,10 +1,10 @@
 <!-- Modal -->
 <div class="modal fade" id="myModalCategoria" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Crear Categoria</h5>
-                <button type="button" onclick="CerrarModal('Usuario')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Formulario -->
             <form action="../Controlador/add.php" method="POST">
