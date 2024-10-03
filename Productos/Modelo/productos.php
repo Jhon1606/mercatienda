@@ -9,13 +9,12 @@ class productos extends conexion
         $this->conexion = parent::__construct();
     }
 
-    public function add($codigo, $nombre, $categoria_id, $precio, $cantidad, $imagen)
+    public function add($codigo, $nombre, $precio, $cantidad, $imagen)
     {
-        $statement = $this->conexion->prepare("INSERT INTO productos (codigo,nombre,categoria_id,precio,cantidad,imagen)
-                                        VALUES(:codigo, :nombre, :categoria_id, :precio, :cantidad, :imagen)");
+        $statement = $this->conexion->prepare("INSERT INTO productos (codigo,nombre,precio,cantidad,imagen)
+                                        VALUES(:codigo, :nombre, :precio, :cantidad, :imagen)");
         $statement->bindParam(':codigo', $codigo);
         $statement->bindParam(':nombre', $nombre);
-        $statement->bindParam(':categoria_id', $categoria_id);
         $statement->bindParam(':precio', $precio);
         $statement->bindParam(':cantidad', $cantidad);
         $statement->bindParam(':imagen', $imagen);
@@ -48,7 +47,13 @@ class productos extends conexion
     public function getProductos()
     {
         $rows = null;
-        $statement = $this->conexion->prepare("SELECT * FROM productos");
+        $statement = $this->conexion->prepare(
+            "SELECT p.*, GROUP_CONCAT(c.nombre SEPARATOR ', ') AS categorias 
+         FROM productos p 
+         LEFT JOIN producto_categoria pc ON p.id = pc.producto_id
+         LEFT JOIN categorias c ON pc.categoria_id = c.id
+         GROUP BY p.id"
+        );
         $statement->execute();
         while ($result = $statement->fetch()) {
             $rows[] = $result;
@@ -92,16 +97,15 @@ class productos extends conexion
         return $rows;
     }
 
-    public function update($id, $codigo, $nombre, $categoria, $precio, $cantidad, $imagen)
+    public function update($id, $codigo, $nombre, $precio, $cantidad, $imagen)
     {
-        $statement = $this->conexion->prepare("UPDATE productos SET  codigo=:codigo, nombre=:nombre, categoria=:categoria, 
+        $statement = $this->conexion->prepare("UPDATE productos SET  codigo=:codigo, nombre=:nombre,
                                             precio=:precio, cantidad=:cantidad, imagen=:imagen, 
                                             WHERE id = :id");
 
         $statement->bindParam(':id', $id);
         $statement->bindParam(':codigo', $codigo);
         $statement->bindParam(':nombre', $nombre);
-        $statement->bindParam(':categoria', $categoria);
         $statement->bindParam(':precio', $precio);
         $statement->bindParam(':cantidad', $cantidad);
         $statement->bindParam(':imagen', $imagen);

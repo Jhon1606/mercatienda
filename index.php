@@ -50,10 +50,10 @@ $productos = $modeloProducto->getProductos();
                         <tr>
                             <td><?php echo $producto['codigo']; ?></td>
                             <td><?php echo $producto['nombre']; ?></td>
-                            <td><?php echo $producto['categoria_id']; ?></td>
+                            <td><?php echo $producto['categorias']; ?></td>
                             <td><?php echo $producto['precio']; ?></td>
                             <td><?php echo $producto['cantidad']; ?></td>
-                            <td><?php echo $producto['imagen']; ?></td>
+                            <td><img src="<?php echo $producto['imagen'] ?>" alt="img" style='width: 150px; height: 120px;'></td>
                             <td>
                                 <a href="javascript:void(0);" onclick="modalEditarProducto('<?php echo $producto['id']; ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
                                 <a href="javascript:void(0);" onclick="modalEliminar('Producto')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
