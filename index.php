@@ -56,7 +56,7 @@ $productos = $modeloProducto->getProductos();
                             <td><img src="<?php echo $producto['imagen'] ?>" alt="img" style='width: 150px; height: 120px;'></td>
                             <td>
                                 <a href="javascript:void(0);" onclick="modalEditarProducto('<?php echo $producto['id']; ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
-                                <a href="javascript:void(0);" onclick="modalEliminar('Producto')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
+                                <a href="javascript:void(0);" onclick="modalEliminar('<?php echo $producto['id']; ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
                             </td>
                         </tr>
                     </tbody>
@@ -69,6 +69,23 @@ $productos = $modeloProducto->getProductos();
     <?php
             }
     ?>
+
+    <?php
+    if ($productos != null) {
+        foreach ($productos as $producto) {
+            $cambios = $modeloProducto->getCambios($producto['id']);
+            if (!empty($cambios)) {
+                echo '<h5>Historial de cambios</h5>';
+                echo '<ul>';
+                foreach ($cambios as $cambio) {
+                    echo '<li>' . $cambio['fecha_cambio'] . ' - ' . $cambio['campo_modificado'] . ': de ' . $cambio['valor_anterior'] . ' a ' . $cambio['valor_nuevo'] . '</li>';
+                }
+                echo '</ul>';
+            }
+        }
+    }
+    ?>
+
     </div>
 
     <!-- Paginador -->
@@ -99,9 +116,9 @@ $productos = $modeloProducto->getProductos();
             <?php if (isset($_GET['accion'])): ?>
                 let accion = "<?php echo $_GET['accion']; ?>";
                 if (accion === 'editar') {
-                    mensaje = "¡Éxito! El empleado fue editado con éxito.";
+                    mensaje = "¡Éxito! El producto fue editado con éxito.";
                 } else if (accion === 'eliminar') {
-                    mensaje = "¡Éxito! El empleado fue eliminado con éxito.";
+                    mensaje = "¡Éxito! El producto fue eliminado con éxito.";
                 }
             <?php endif; ?>
             Swal.fire({

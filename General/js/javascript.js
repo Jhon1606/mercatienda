@@ -70,54 +70,43 @@ function modalEditarCategoria(id){
     });
 }
 
-// function modalEditarEmpleado(id){
-//     $.ajax({
-//         url: "/PruebaTecnica/General/Queries/infoempleado.php",
-//         type: "POST",
-//         dataType: "JSON",
-//         data: {id: id}
-//     })
-//     .done(function(info){
-//         var id = info[0].id;
-//         var nombre = info[0].nombre;
-//         var email = info[0].email;
-//         var sexo = info[0].sexo;
-//         var area_id = info[0].area_id;
-//         var boletin = info[0].boletin;
-//         var descripcion = info[0].descripcion;
-//         var roles = info[0].roles;
+function modalEditarProducto(id){
+    $.ajax({
+        url: "/mercatienda/General/Queries/infoproducto.php",
+        type: "POST",
+        dataType: "JSON",
+        data: {id: id}
+    })
+    .done(function(info){
+        var id = info[0].id;
+        var codigo = info[0].codigo;
+        var nombre = info[0].nombre;
+        var precio = info[0].precio;
+        var cantidad = info[0].cantidad;
+        var imagen = info[0].imagen;
+        var categorias = info[0].categorias;
 
-//         $("#ideditar").val(id);
-//         $("#nombre").val(nombre);
-//         $("#email").val(email);
-//         $("#sexo").val(sexo);
-//         $("#area_id").val(area_id);
-//         if (boletin === 1) {
-//             $("#boletin").prop("checked", true);
-//         } else {
-//             $("#boletin").prop("checked", false);
-//         }
-//         if (sexo === "F") {
-//             $("#femenino").prop("checked", true);
-//         } else if (sexo === "M") {
-//             $("#masculino").prop("checked", true);
-//         }
-//         $("#descripcion").val(descripcion);
-//          // Limpiar los checkboxes de roles
-//         $('input[name="rol[]"]').prop('checked', false);
+        $("#ideditar").val(id);
+        $("#codigo").val(codigo);
+        $("#nombre").val(nombre);
+        $("#precio").val(precio);
+        $("#cantidad").val(cantidad);
+        $("#imagenActual").attr("src", imagen);
+        // Limpiar los checkboxes de roles
+        $('input[name="categoria[]"]').prop('checked', false);
 
-//         // Marcar los checkboxes de roles según los roles del empleado
-//         if (roles && roles.length > 0) {
-//             roles.forEach(function(rolId) {
-//                 $('#rol-' + rolId).prop('checked', true);
-//             });
-//         }
-//         $('#myModalEditarEmpleado').modal('show');
-//     });
-// }
+        
+        if (categorias && categorias.length > 0) {
+            categorias.forEach(function(categoriaId) {
+                $('#cat-' + categoriaId).prop('checked', true);
+            });
+        }
+        $('#myModalEditarProducto').modal('show');
+    });
+}
 
-function modalEliminar(pagina, id){
+function modalEliminar(id){
     $("#ideliminar").val(id);
-    $('#myModalEliminar' + pagina).modal('show');
+    $('#myModalEliminar').modal('show');
 }
 

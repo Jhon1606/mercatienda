@@ -6,18 +6,18 @@
                 <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="../Controlador/edit.php" method="POST">
+            <form action="/mercatienda/Productos/Controlador/edit.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="ideditar" name="id">
                     <div class="mb-3">
                         <div class="row">
                             <div class="col">
                                 <label class="form-label">Codigo: </label>
-                                <input class="form-control" type="number" name="codigo" required="">
+                                <input class="form-control" type="number" name="codigo" id="codigo" required="">
                             </div>
                             <div class="col">
                                 <label class="form-label">Nombre: </label>
-                                <input class="form-control" type="text" name="nombre" required="">
+                                <input class="form-control" type="text" name="nombre" id="nombre" required="">
                             </div>
                         </div>
                     </div>
@@ -25,11 +25,11 @@
                         <div class="row">
                             <div class="col">
                                 <label class="form-label">Precio: </label>
-                                <input class="form-control" type="number" name="precio" required="">
+                                <input class="form-control" type="number" name="precio" id="precio" required="">
                             </div>
                             <div class="col">
                                 <label class="form-label">Cantidad: </label>
-                                <input class="form-control" type="number" name="cantidad" required="">
+                                <input class="form-control" type="number" name="cantidad" id="cantidad" required="">
                             </div>
                         </div>
                     </div>
@@ -43,8 +43,8 @@
                         <?php if (!empty($categorias)): ?>
                             <?php foreach ($categorias as $categoria): ?>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="categoria[]" id="categoria-<?php echo $categoria['id']; ?>" value="<?php echo $categoria['id']; ?>">
-                                    <label class="form-check-label" for="categoria-<?php echo $categoria['id']; ?>">
+                                    <input class="form-check-input" type="checkbox" name="categoria[]" id="cat-<?php echo $categoria['id']; ?>" value="<?php echo $categoria['id']; ?>">
+                                    <label class="form-check-label" for="cat-<?php echo $categoria['id']; ?>">
                                         <?php echo $categoria['nombre']; ?>
                                     </label>
                                 </div>
@@ -54,8 +54,10 @@
                         <?php endif; ?>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Imagen Actual:</label>
+                        <img id="imagenActual" src="" alt="Imagen del Producto" style="width: 150; height: 120px;" class="img-fluid mb-3"> <br>
                         <label class="form-label">Imagen: </label>
-                        <input class="form-control" type="file" name="imagen" required="">
+                        <input class="form-control" type="file" name="imagen" id="imagen" required="">
                     </div>
                 </div>
                 <div class="modal-footer">

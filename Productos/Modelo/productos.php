@@ -92,15 +92,17 @@ class productos extends conexion
         $statement->bindParam(":id", $id);
         $statement->execute();
         while ($result = $statement->fetch()) {
-            $rows[] = $result['rol_id'];
+            $rows[] = $result['categoria_id'];
         }
         return $rows;
     }
 
     public function update($id, $codigo, $nombre, $precio, $cantidad, $imagen)
     {
-        $statement = $this->conexion->prepare("UPDATE productos SET  codigo=:codigo, nombre=:nombre,
-                                            precio=:precio, cantidad=:cantidad, imagen=:imagen, 
+        // Obtener los valores actuales del producto antes de la actualización
+        $producto_actual = $this->getById($id)[0]; // Asumiendo que getById devuelve un array
+        $statement = $this->conexion->prepare("UPDATE productos SET codigo=:codigo, nombre=:nombre,
+                                            precio=:precio, cantidad=:cantidad, imagen=:imagen 
                                             WHERE id = :id");
 
         $statement->bindParam(':id', $id);
@@ -111,20 +113,39 @@ class productos extends conexion
         $statement->bindParam(':imagen', $imagen);
 
         if ($statement->execute()) {
+            // Registrar cambios en cantidad y precio si han cambiado
+            if ($producto_actual['precio'] != $precio) {
+                $this->registrarCambio($id, 'precio', $producto_actual['precio'], $precio);
+            }
+            if ($producto_actual['cantidad'] != $cantidad) {
+                $this->registrarCambio($id, 'cantidad', $producto_actual['cantidad'], $cantidad);
+            }
             header('Location: ../../index.php');
         } else {
             header('Location: ../../index.php');
         }
     }
 
-    // public function updateEmpleadoRol($empleado_id, $rol_id)
-    // {
-    //     $statement = $this->conexion->prepare("UPDATE empleado_rol SET rol_id=:rol_id WHERE empleado_id = :empleado_id");
+    public function registrarCambio($producto_id, $campo, $valor_anterior, $valor_nuevo)
+    {
+        $statement = $this->conexion->prepare(
+            "INSERT INTO log_cambios (producto_id, campo_modificado, valor_anterior, valor_nuevo)
+        VALUES (:producto_id, :campo_modificado, :valor_anterior, :valor_nuevo)"
+        );
+        $statement->bindParam(':producto_id', $producto_id);
+        $statement->bindParam(':campo_modificado', $campo);
+        $statement->bindParam(':valor_anterior', $valor_anterior);
+        $statement->bindParam(':valor_nuevo', $valor_nuevo);
+        $statement->execute();
+    }
 
-    //     $statement->bindParam(':empleado_id', $empleado_id);
-    //     $statement->bindParam(':rol_id', $rol_id);
-    //     $statement->execute();
-    // }
+    public function getCambios($producto_id)
+    {
+        $statement = $this->conexion->prepare("SELECT * FROM log_cambios WHERE producto_id = :producto_id ORDER BY fecha_cambio DESC");
+        $statement->bindParam(':producto_id', $producto_id);
+        $statement->execute();
+        return $statement->fetchAll();
+    }
 
     public function delete($id)
     {
