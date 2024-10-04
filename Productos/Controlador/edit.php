@@ -9,6 +9,8 @@ if ($_POST) {
         $codigo = $_POST['codigo'];
         $nombre = $_POST['nombre'];
         $precio = $_POST['precio'];
+        $precio_formateado = str_replace('.', '', $precio);
+        $precio_formateado = str_replace(',', '.', $precio_formateado);
         $cantidad = $_POST['cantidad'];
         $categoria = $_POST['categoria'];
         $directorio = '../../General/img/';
@@ -21,7 +23,7 @@ if ($_POST) {
             $rutaImagen = 'General/img/' . basename($nombreArchivo);
         }
 
-        $modeloProducto->update($id, $codigo, $nombre, $precio, $cantidad, $rutaImagen);
+        $modeloProducto->update($id, $codigo, $nombre, $precio_formateado, $cantidad, $rutaImagen);
         $modeloProducto->deleteProductoCategoria($id);
         foreach ($categoria as $categoria_id) {
             $modeloProducto->addProductoCategoria($id, $categoria_id);

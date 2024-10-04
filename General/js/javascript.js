@@ -64,6 +64,7 @@ $(document).ready(function() {
     });
 });
 
+
 function modalAgregar(pagina){
     $('#myModal' + pagina).modal('show');
 }
