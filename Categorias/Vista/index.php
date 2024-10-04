@@ -58,7 +58,7 @@ $totalPaginas = ceil($totalCategorias / $limit);
                             <td><?php echo $categoria['nombre']; ?></td>
                             <td class="text-end">
                                 <a href="javascript:void(0);" onclick="modalEditarCategoria('<?php echo $categoria['id'] ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
-                                <a href="javascript:void(0);" onclick="modalEliminar('Categoria','<?php echo $categoria['id'] ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
+                                <a href="javascript:void(0);" onclick="modalEliminarCategoria('<?php echo $categoria['id'] ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
                             </td>
                         </tr>
             </tbody>

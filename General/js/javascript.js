@@ -135,3 +135,8 @@ function modalEliminar(id){
     $('#myModalEliminar').modal('show');
 }
 
+function modalEliminarCategoria(id){
+    $("#ideliminar").val(id);
+    $('#myModalEliminarCategoria').modal('show');
+}
+
