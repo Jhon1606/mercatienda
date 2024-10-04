@@ -32,6 +32,29 @@ class categorias extends conexion
         return $rows;
     }
 
+    public function getCategoriasPage($limit, $offset)
+    {
+        $rows = null;
+        $statement = $this->conexion->prepare("SELECT * FROM categorias LIMIT :limit OFFSET :offset");
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+        while ($result = $statement->fetch()) {
+            $rows[] = $result;
+        }
+        return $rows;
+    }
+
+    public function getTotalCategorias()
+    {
+        $statement = $this->conexion->prepare(
+            "SELECT COUNT(*) as total FROM categorias"
+        );
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
+    }
+
     public function getById($id)
     {
         $rows = null;

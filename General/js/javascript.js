@@ -1,53 +1,68 @@
-// $(document).ready(function() {
-//     $('#empleadoForm').on('submit', function(e) {
-//         e.preventDefault(); 
+$(document).ready(function() {
+    $('#productoForm').on('submit', function(e) { 
+        e.preventDefault(); 
 
-//         $('.error-message').text("");
+        $('.error-message').text(""); // Limpiar mensajes de error
 
-//         let isValid = true;
+        let isValid = true;
 
-//         const nombre = $('#nombre').val().trim();
-//         if (nombre === "") {
-//             isValid = false;
-//             $('#error-nombre').text("El nombre no puede estar vacío, por favor ingrese un nombre.");
-//         }
+        // Validación del campo Código
+        const codigo = $('input[name="codigo"]').val().trim();
+        if (codigo === "") {
+            isValid = false;
+            $('#error-codigo').text("El código no puede estar vacío, por favor ingrese un código.");
+        }
 
-//         const correo = $('#correo').val().trim();
-//         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
-//         if (correo === "" || !emailRegex.test(correo)) {
-//             isValid = false;
-//             $('#error-correo').text("Ingrese un correo electrónico válido.");
-//         }
+        // Validación del campo Nombre
+        const nombre = $('input[name="nombre"]').val().trim();
+        if (nombre === "") {
+            isValid = false;
+            $('#error-nombre').text("El nombre no puede estar vacío, por favor ingrese un nombre.");
+        }
 
-//         const sexo = $('input[name="sexo"]:checked').val();
-//         if (!sexo) {
-//             isValid = false;
-//             $('#error-sexo').text("Seleccione un sexo.");
-//         }
+        // Validación del campo Precio
+        const precio = $('input[name="precio"]').val().trim();
+        const precioRegex = /^\d{1,3}(?:\.\d{3})*(?:,\d{2})?$/; // Permitir formato como 10.200,25
+        const precioNumeric = parseFloat(precio.replace('.', '').replace(',', '.')); // Convertir a formato numérico
 
-//         const area_id = $('select[name="area_id"]').val();
-//         if (!area_id) {
-//             isValid = false;
-//             $('#error-area').text("Seleccione un área.");
-//         }
+        if (precio === "" || !precioRegex.test(precio) || precioNumeric < 0) {
+            isValid = false;
+            $('#error-precio').text("El precio debe ser un número positivo con hasta 2 decimales en formato (10.200,25).");
+        }
 
-//         const descripcion = $('#descripcion').val().trim();
-//         if (descripcion === "") {
-//             isValid = false;
-//             $('#error-descripcion').text("La descripción no puede estar vacía, por favor ingrese una descripción.");
-//         }
+        // Validación del campo Cantidad
+        const cantidad = $('input[name="cantidad"]').val().trim();
+        if (cantidad < 0 || !Number.isInteger(parseFloat(cantidad))) {
+            isValid = false;
+            $('#error-cantidad').text("La cantidad debe ser un número entero mayor o igual a cero.");
+        }
 
-//         const roles = $('input[name="rol[]"]:checked');
-//         if (roles.length === 0) {
-//             isValid = false;
-//             $('#error-roles').text("Seleccione al menos un rol.");
-//         }
-        
-//         if (isValid) {
-//             this.submit(); 
-//         }
-//     });
-// });
+        // Validación de Categorías
+        const categorias = $('input[name="categoria[]"]:checked');
+        if (categorias.length === 0) {
+            isValid = false;
+            $('#error-categorias').text("Debe seleccionar al menos una categoría.");
+        }
+
+        // Validación del campo Imagen
+        const imagen = $('input[name="imagen"]')[0].files[0];
+        if (!imagen) {
+            isValid = false;
+            $('#error-imagen').text("Debe seleccionar una imagen.");
+        } else {
+            const validExtensions = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!validExtensions.includes(imagen.type)) {
+                isValid = false;
+                $('#error-imagen').text("El archivo debe ser una imagen (JPG, PNG o GIF).");
+            }
+        }
+
+        // Si es válido, enviar el formulario
+        if (isValid) {
+            this.submit(); 
+        }
+    });
+});
 
 function modalAgregar(pagina){
     $('#myModal' + pagina).modal('show');
@@ -102,6 +117,26 @@ function modalEditarProducto(id){
             });
         }
         $('#myModalEditarProducto').modal('show');
+    });
+}
+
+function modalHistorial(id) {
+    $.ajax({
+        url: '/mercatienda/General/Queries/infohistorial.php', // El archivo que procesará la solicitud
+        type: 'POST',
+        data: { id: id },
+        success: function(response) {
+            $('#historialContent').html(response); // Cargar el contenido en el modal
+            $('#myModalHistorial').modal('show');  // Mostrar el modal
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo cargar el historial de cambios.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
     });
 }
 

@@ -1,8 +1,20 @@
 <?php
 require_once('Productos/Modelo/productos.php');
 
+// Obtener la página actual
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Definir el límite y calcular el offset
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
 $modeloProducto = new productos;
 $productos = $modeloProducto->getProductos();
+$productosPage = $modeloProducto->getProductosPage($limit, $offset);
+
+// Obtener el número total de productos para paginación
+$totalProductos = $modeloProducto->getTotalProductos();
+$totalPaginas = ceil($totalProductos / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -43,8 +55,8 @@ $productos = $modeloProducto->getProductos();
                 </tr>
             </thead>
             <?php
-            if ($productos != null) {
-                foreach ($productos as $producto) {
+            if ($productosPage != null) {
+                foreach ($productosPage as $producto) {
             ?>
                     <tbody>
                         <tr>
@@ -57,6 +69,7 @@ $productos = $modeloProducto->getProductos();
                             <td>
                                 <a href="javascript:void(0);" onclick="modalEditarProducto('<?php echo $producto['id']; ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
                                 <a href="javascript:void(0);" onclick="modalEliminar('<?php echo $producto['id']; ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
+                                <a href="javascript:void(0);" onclick="modalHistorial('<?php echo $producto['id']; ?>')"><button class="btn btn-info"><i class="bi bi-clock-history"></i></button></a>
                             </td>
                         </tr>
                     </tbody>
@@ -69,46 +82,34 @@ $productos = $modeloProducto->getProductos();
     <?php
             }
     ?>
-
-    <?php
-    if ($productos != null) {
-        foreach ($productos as $producto) {
-            $cambios = $modeloProducto->getCambios($producto['id']);
-            if (!empty($cambios)) {
-                echo '<h5>Historial de cambios</h5>';
-                echo '<ul>';
-                foreach ($cambios as $cambio) {
-                    echo '<li>' . $cambio['fecha_cambio'] . ' - ' . $cambio['campo_modificado'] . ': de ' . $cambio['valor_anterior'] . ' a ' . $cambio['valor_nuevo'] . '</li>';
-                }
-                echo '</ul>';
-            }
-        }
-    }
-    ?>
-
     </div>
 
-    <!-- Paginador -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page - 1; ?>">Anterior</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($page < $totalPaginas): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page + 1; ?>">Siguiente</a>
+                </li>
+            <?php endif; ?>
         </ul>
     </nav>
+
     <?php require_once('Productos/Vista/add.php'); ?>
     <?php require_once('Productos/Vista/edit.php'); ?>
     <?php require_once('Productos/Vista/delete.php'); ?>
+    <?php require_once('Productos/Vista/historial.php'); ?>
 
     <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'success'): ?>
         <script>

@@ -8,8 +8,11 @@ if ($_POST) {
         $codigo = $_POST['codigo'];
         $nombre = $_POST['nombre'];
         $categoria = $_POST['categoria'];
+        // Formatear el precio
         $precio = $_POST['precio'];
-        // $precio_formateado = str_replace(',', '.', str_replace('.', '', $precio));
+        // Convertir el formato de precio de 10.200,25 a 10200.25
+        $precio_formateado = str_replace('.', '', $precio); // Eliminar puntos
+        $precio_formateado = str_replace(',', '.', $precio_formateado); // Cambiar coma a punto
         $cantidad = $_POST['cantidad'];
         $directorio = '../../General/img/';
 
@@ -25,7 +28,7 @@ if ($_POST) {
             $rutaImagen = 'General/img/' . basename($nombreArchivo);
         }
 
-        $modeloProducto->add($codigo, $nombre, $precio, $cantidad, $rutaImagen);
+        $modeloProducto->add($codigo, $nombre, $precio_formateado, $cantidad, $rutaImagen);
         $producto_id = $modeloProducto->getLastInsertedId();
 
         foreach ($categoria as $categoria_id) {

@@ -1,8 +1,19 @@
 <?php
 require_once('../Modelo/categorias.php');
+// Obtener la página actual
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Definir el límite y calcular el offset
+$limit = 5;
+$offset = ($page - 1) * $limit;
 
 $modeloCategoria = new categorias;
 $categorias = $modeloCategoria->getCategorias();
+$categoriasPage = $modeloCategoria->getCategoriasPage($limit, $offset);
+
+// Obtener el número total de productos para paginación
+$totalCategorias = $modeloCategoria->getTotalCategorias();
+$totalPaginas = ceil($totalCategorias / $limit);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,8 +50,8 @@ $categorias = $modeloCategoria->getCategorias();
             </thead>
             <tbody>
                 <?php
-                if ($categorias != null) {
-                    foreach ($categorias as $categoria) {
+                if ($categoriasPage != null) {
+                    foreach ($categoriasPage as $categoria) {
                 ?>
                         <tr>
                             <td><?php echo $categoria['id']; ?></td>
@@ -63,28 +74,34 @@ $categorias = $modeloCategoria->getCategorias();
     </div>
 
     <!-- Paginador -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+    <nav>
+        <ul class="pagination">
+            <?php if ($page > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page - 1; ?>">Anterior</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($page < $totalPaginas): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $page + 1; ?>">Siguiente</a>
+                </li>
+            <?php endif; ?>
         </ul>
     </nav>
+
     <?php
     require_once('add.php');
     require_once('edit.php');
     require_once('delete.php');
     ?>
+
     <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'success'): ?>
         <script>
             let mensaje = "El registro se realizó con éxito.";

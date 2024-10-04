@@ -61,6 +61,36 @@ class productos extends conexion
         return $rows;
     }
 
+    public function getProductosPage($limit, $offset)
+    {
+        $rows = null;
+        $statement = $this->conexion->prepare(
+            "SELECT p.*, GROUP_CONCAT(c.nombre SEPARATOR ', ') AS categorias 
+         FROM productos p 
+         LEFT JOIN producto_categoria pc ON p.id = pc.producto_id
+         LEFT JOIN categorias c ON pc.categoria_id = c.id
+         GROUP BY p.id
+         LIMIT :limit OFFSET :offset"
+        );
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+        while ($result = $statement->fetch()) {
+            $rows[] = $result;
+        }
+        return $rows;
+    }
+
+    public function getTotalProductos()
+    {
+        $statement = $this->conexion->prepare(
+            "SELECT COUNT(*) as total FROM productos"
+        );
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
+    }
+
     public function getCategorias()
     {
         $rows = null;

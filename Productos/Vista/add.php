@@ -7,17 +7,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Formulario -->
-            <form action="/mercatienda/Productos/Controlador/add.php" method="POST" enctype="multipart/form-data">
+            <form id="productoForm" action="/mercatienda/Productos/Controlador/add.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
                         <div class="row">
                             <div class="col">
                                 <label class="form-label">Codigo: </label>
-                                <input class="form-control" type="number" name="codigo" required="">
+                                <input class="form-control" type="number" name="codigo">
+                                <div class="text-danger error-message" id="error-codigo"></div>
                             </div>
                             <div class="col">
                                 <label class="form-label">Nombre: </label>
-                                <input class="form-control" type="text" name="nombre" required="">
+                                <input class="form-control" type="text" name="nombre">
+                                <div class="text-danger error-message" id="error-nombre"></div>
                             </div>
                         </div>
                     </div>
@@ -25,11 +27,13 @@
                         <div class="row">
                             <div class="col">
                                 <label class="form-label">Precio: </label>
-                                <input class="form-control" type="number" name="precio" required="">
+                                <input class="form-control" type="text" name="precio">
+                                <div class="text-danger error-message" id="error-precio"></div>
                             </div>
                             <div class="col">
                                 <label class="form-label">Cantidad: </label>
-                                <input class="form-control" type="number" name="cantidad" required="">
+                                <input class="form-control" type="number" name="cantidad">
+                                <div class="text-danger error-message" id="error-cantidad"></div>
                             </div>
                         </div>
                     </div>
@@ -47,15 +51,18 @@
                                     <label class="form-check-label" for="categoria-<?php echo $categoria['id']; ?>">
                                         <?php echo $categoria['nombre']; ?>
                                     </label>
+
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <p>No hay categorias disponibles.</p>
                         <?php endif; ?>
+                        <div class="text-danger error-message" id="error-categorias"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Imagen: </label>
-                        <input class="form-control" type="file" name="imagen" required="">
+                        <input class="form-control" type="file" name="imagen">
+                        <div class="text-danger error-message" id="error-imagen"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
