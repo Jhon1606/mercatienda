@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editForm" action="/mercatienda/Productos/Controlador/edit.php" method="POST" enctype="multipart/form-data">
+            <form action="/mercatienda/Productos/Controlador/edit.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="ideditar" name="id">
                     <div class="mb-3">
@@ -14,12 +14,10 @@
                             <div class="col">
                                 <label class="form-label">Codigo: </label>
                                 <input class="form-control" type="number" name="codigo" id="codigo" required="">
-                                <div class="text-danger error-message" id="error-codigo"></div>
                             </div>
                             <div class="col">
                                 <label class="form-label">Nombre: </label>
                                 <input class="form-control" type="text" name="nombre" id="nombre" required="">
-                                <div class="text-danger error-message" id="error-nombre"></div>
                             </div>
                         </div>
                     </div>
@@ -27,11 +25,13 @@
                         <div class="row">
                             <div class="col">
                                 <label class="form-label">Precio: </label>
-                                <input class="form-control" type="text" name="precio" id="precio" required="">
+                                <input class="form-control" type="text" name="precio" id="precio">
+                                <div class="text-danger error-message" id="error-codigo"></div>
                             </div>
                             <div class="col">
                                 <label class="form-label">Cantidad: </label>
-                                <input class="form-control" type="number" name="cantidad" id="cantidad" required="">
+                                <input class="form-control" type="number" name="cantidad" id="cantidad">
+                                <div class="text-danger error-message" id="error-cantidad"></div>
                             </div>
                         </div>
                     </div>

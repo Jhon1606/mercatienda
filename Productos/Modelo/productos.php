@@ -129,7 +129,6 @@ class productos extends conexion
 
     public function update($id, $codigo, $nombre, $precio, $cantidad, $imagen)
     {
-        // Obtener los valores actuales del producto antes de la actualización
         $producto_actual = $this->getById($id)[0]; // Asumiendo que getById devuelve un array
         $statement = $this->conexion->prepare("UPDATE productos SET codigo=:codigo, nombre=:nombre,
                                             precio=:precio, cantidad=:cantidad, imagen=:imagen 
@@ -143,7 +142,6 @@ class productos extends conexion
         $statement->bindParam(':imagen', $imagen);
 
         if ($statement->execute()) {
-            // Registrar cambios en cantidad y precio si han cambiado
             if ($producto_actual['precio'] != $precio) {
                 $this->registrarCambio($id, 'precio', $producto_actual['precio'], $precio);
             }
