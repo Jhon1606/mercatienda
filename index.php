@@ -65,7 +65,7 @@ $totalPaginas = ceil($totalProductos / $limit);
                             <td><?php echo $producto['categorias']; ?></td>
                             <td><?php echo $producto['precio']; ?></td>
                             <td><?php echo $producto['cantidad']; ?></td>
-                            <td><img src="<?php echo $producto['imagen'] ?>" alt="img" style='width: 150px; height: 120px;'></td>
+                            <td> <a href="javascript:void(0);" onclick="modalImagen('<?php echo $producto['imagen']; ?>')"> <img src="<?php echo $producto['imagen'] ?>" alt="img" style='width: 150px; height: 120px;'></a></td>
                             <td>
                                 <a href="javascript:void(0);" onclick="modalEditarProducto('<?php echo $producto['id']; ?>')"><button class="btn btn-success"><i class="bi bi-pencil-square"></i></button></a>
                                 <a href="javascript:void(0);" onclick="modalEliminar('<?php echo $producto['id']; ?>')"><button class=" btn btn-danger"><i class="bi bi-trash3"></i></button></a>
@@ -110,6 +110,7 @@ $totalPaginas = ceil($totalProductos / $limit);
     <?php require_once('Productos/Vista/edit.php'); ?>
     <?php require_once('Productos/Vista/delete.php'); ?>
     <?php require_once('Productos/Vista/historial.php'); ?>
+    <?php require_once('Productos/Vista/imagen.php'); ?>
 
     <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'success'): ?>
         <script>

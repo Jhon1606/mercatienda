@@ -61,6 +61,11 @@ function modalAgregar(pagina){
     $('#myModal' + pagina).modal('show');
 }
 
+function modalImagen(imagen){
+    $('#imagenEx').attr("src", imagen);
+    $('#modalImagen').modal('show');
+}
+
 function modalEditarCategoria(id){
     $.ajax({
         url: "/mercatienda/General/Queries/infocategorias.php",
@@ -100,6 +105,7 @@ function modalEditarProducto(id){
         $("#precio").val(precio);
         $("#cantidad").val(cantidad);
         $("#imagenActual").attr("src", imagen);
+        $("#imagenActualInput").val(imagen);
         $('input[name="categoria[]"]').prop('checked', false);
         if (categorias && categorias.length > 0) {
             categorias.forEach(function(categoriaId) {

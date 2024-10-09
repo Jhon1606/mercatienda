@@ -57,9 +57,10 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Imagen Actual:</label>
+                        <input type="hidden" id="imagenActualInput" name="imagenActualInput">
                         <img id="imagenActual" src="" alt="Imagen del Producto" style="width: 150; height: 120px;" class="img-fluid mb-3"> <br>
                         <label class="form-label">Imagen: </label>
-                        <input class="form-control" type="file" name="imagen" id="imagen" required="">
+                        <input class="form-control" type="file" name="imagen" id="imagen">
                     </div>
                 </div>
                 <div class="modal-footer">
